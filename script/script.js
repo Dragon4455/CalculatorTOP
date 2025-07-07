@@ -11,7 +11,9 @@ const divide = (num1, num2) =>{
     return num1 / num2;
 }
 
-const operate = (num1,num2,operator) =>{
+const operate = (num1,num2 = 0,operator) =>{
+    num1 = parseInt(num1);
+    num2 = parseInt(num2);
     switch(operator){
         case "+":
            return add(num1,num2);
@@ -27,8 +29,97 @@ const operate = (num1,num2,operator) =>{
             
     }
 }
+let $buttonsNumbers = document.querySelector(".calc__numbers"),
+$buttonsOperators = document.querySelector(".calc__operators"),
+$calcResult = document.querySelector(".calc__text");
+
+$buttonsNumbers.addEventListener("click", (e)=> {
+
+if(!(e.target.matches(".calc__numbers"))){
+
+    if(e.target.textContent === "Clear"){
+            result = "";
+            operator = "";
+            displayN2 = "",
+            displayN1 = "";
+            
+        } else{
+    
+            if(displayN1 && operator){
+          
+              if(displayN2 === "0" && e.target.textContent === "0" ){
+                  displayN2 = 0
+              } else{
+                  
+                  displayN2 = displayN2 + e.target.textContent;
+                  console.log(displayN2);
+              }
+          
+            } else{
+          
+              if(displayN1 === "0" && e.target.textContent === "0" ){
+                  displayN1 = "0";
+              } else{
+                  
+                  displayN1 = displayN1 + e.target.textContent;
+                    console.log(displayN1)
+              }
+          
+            }
+        }
+      $calcResult.textContent = `${displayN1} ${operator} ${displayN2}` ;
+}  
+        
+
+});
+
+$buttonsOperators.addEventListener("click", (e)=>{
 
 
-let displayN1 = 0,
-displayN2 = 0,
-operator = "";
+if(!(e.target.matches(".calc__operators"))){
+        if((e.target.textContent === "+" ||
+       e.target.textContent === "-" ||
+       e.target.textContent === "*" ||
+       e.target.textContent === "/" ) &&
+       displayN1 &&
+       !(operator)) 
+       {
+        operator = e.target.textContent;
+        console.log(operator)
+    }
+    if((e.target.textContent === "+" ||
+       e.target.textContent === "-" ||
+       e.target.textContent === "*" ||
+       e.target.textContent === "/" ) &&
+       displayN1 && operator && displayN2) 
+       {
+        result = operate(displayN1, displayN2, operator);
+        displayN1 = result;
+        displayN2 = "";
+        operator = e.target.textContent;
+        result = "";
+    }
+
+
+    if(e.target.textContent === "=" && displayN1 && operator && displayN2){
+
+        result = operate(displayN1, displayN2, operator);
+        console.log(result)
+        displayN1 = result;
+
+        result = "";
+        operator = "";
+        displayN2 = "";
+    }
+    $calcResult.textContent = `${displayN1} ${operator} ${displayN2}` ;
+    if(result === Infinity){
+      $calcResult.textContent = `0`
+    }
+    }
+});
+
+
+let displayN1 = "",
+displayN2 = "",
+operator = "",
+result = "";
